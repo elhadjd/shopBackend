@@ -5,7 +5,7 @@ export const productController = (()=>{
 
     const getProducts = (async(req:Request,res:Response)=>{
         const limit = Number(req.params.limit)
-        const products = await db.produto.findAll({where:{company_id: 13},offset: limit,limit:limit,
+        const products = await db.produto.findAll({where:{company_id: 1},
             include:[{
                 model: db.stocks,
             }]

@@ -22,12 +22,13 @@ module.exports = (sequelize, DataTypes) => {
     surname: DataTypes.STRING,
     name: DataTypes.STRING,
     email: DataTypes.STRING,
-    whatsapp: DataTypes.STRING,
+    whatssap: DataTypes.STRING,
     phone: DataTypes.STRING,
     city: DataTypes.STRING,
     country: DataTypes.STRING,
     rua: DataTypes.STRING,
-    state: DataTypes.STRING
+    state: DataTypes.STRING,
+    password: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'cliente',

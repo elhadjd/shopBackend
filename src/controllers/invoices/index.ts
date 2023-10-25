@@ -23,12 +23,14 @@ export const invoiceController = (()=>{
 
     const addProdAtOrder = (async(req: Request,res: Response)=>{
         const id = req.params.id
+        const checkout = req.params.checkout
+        const quantity = req.params.quantity
         const product:Product = req.body
         const order = await invoice(Number(id))
-        return insertItem(product,order,res)
+        return insertItem(product,order,res,Number(quantity),checkout)
     })
     
-    const insertItem = async(product:Product,order: TypeInvoice,res:Response)=>{
+    const insertItem = async(product:Product,order: TypeInvoice,res:Response,quantity:number,checkout?: string)=>{
         const stock = await checkStock(product.id,1)
         if (stock.quantity) {
             const [item, created] = await db.invoice_item.findOrCreate({
@@ -37,7 +39,7 @@ export const invoiceController = (()=>{
                     invoice_id: order.id,
                     produtos_id: product.id,
                     armagen_id: stock.armagen_id,
-                    quantity: 1,
+                    quantity: quantity,
                     PriceCost: product.preçocust,
                     PriceSold: product.preçovenda,
                     Discount: 0,
@@ -52,21 +54,21 @@ export const invoiceController = (()=>{
             if (created) {
                 return res.json(await sumOrder(order.id))
             }else{
-                return res.json(await updateItem(product,item))
+                return res.json(await updateItem(product,item,quantity,checkout))
             }
         }
         return res.json(stock)
     }
 
-    const updateItem = (async (product: Product,item: ItemInvoice)=>{
-        const quantity = item.quantity + 1
-        const check = await checkStock(product.id,quantity)
+    const updateItem = (async (product: Product,item: ItemInvoice,quantity:number,checkout?:string)=>{
+        const quant = checkout ? quantity : item.quantity + quantity
+        const check = await checkStock(product.id,quant)
         if (check.quantity) {
             const itemUpdate = await db.invoice_item.findOne({where: {id: item.id}})
             const update = await itemUpdate.update({
-                TotalSold: quantity * itemUpdate.PriceSold,
-                TotalCost: quantity * itemUpdate.PriceCost,
-                quantity: quantity,
+                TotalSold: quant * itemUpdate.PriceSold,
+                TotalCost: quant * itemUpdate.PriceCost,
+                quantity: quant,
             })
             await update.save()
             return sumOrder(item.invoice_id)
