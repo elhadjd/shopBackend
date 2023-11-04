@@ -3,40 +3,31 @@ const {
   Model
 } = require('sequelize');
 module.exports = (sequelize, DataTypes) => {
-  class cliente extends Model {
+  class company extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      cliente.hasMany(models.invoice,{
-        foreignKey: 'cliente_id',
-        onDelete: 'CASCADE',
-      })
-      cliente.hasOne(models.delivery,{
-        foreignKey: 'client_id',
-        onDelete: 'CASCADE',
-      })
+      // define association here
     }
   }
-  cliente.init({
-    company_id: DataTypes.NUMBER,
-    image: DataTypes.STRING,
-    surname: DataTypes.STRING,
+  company.init({
     name: DataTypes.STRING,
-    email: DataTypes.STRING,
-    whatssap: DataTypes.STRING,
+    image: DataTypes.STRING,
+    nif: DataTypes.STRING,
     phone: DataTypes.STRING,
+    email: DataTypes.STRING,
     city: DataTypes.STRING,
+    sede: DataTypes.STRING,
+    house_number: DataTypes.STRING,
     country: DataTypes.STRING,
-    rua: DataTypes.STRING,
-    state: DataTypes.STRING,
-    token: DataTypes.STRING,
-    user_id_clerk: DataTypes.TEXT
+    manager: DataTypes.STRING,
+    activity_type_id: DataTypes.NUMBER,
   }, {
     sequelize,
-    modelName: 'cliente',
+    modelName: 'company',
     defaultScope: {
       attributes: {
         exclude: ['createdAt','updatedAt']
@@ -45,5 +36,5 @@ module.exports = (sequelize, DataTypes) => {
     createdAt: false,
     updatedAt: false,
   });
-  return cliente;
+  return company;
 };

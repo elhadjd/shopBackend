@@ -133,6 +133,7 @@ export const invoiceController = (()=>{
         getInvoices,
         getInvoice,
         addProdAtOrder,
-        removeItem
+        removeItem,
+        invoice
     }
 })

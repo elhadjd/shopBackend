@@ -1,14 +1,14 @@
 import { Request, Response } from "express";
-import { validationResult  ,query,body} from "express-validator"
+import { validationResult} from "express-validator"
 const db = require("../../db/models");
-import bcrypt from 'bcryptjs'
-import { ClientTypeScript } from "../types";
+import { invoiceController } from "../invoices";
 
 export const ClientServices = (()=>{
+    const {invoice} = invoiceController()
     const createClient = (async(req: Request,res: Response)=>{
         const result = validationResult(req)
-        const salt = bcrypt.genSaltSync(10)
-        const hash = bcrypt.hashSync(req.body.password, salt);
+        const invoiceId = req.params.invoiceId
+        const order = await invoice(Number(invoiceId))
         if (!result.isEmpty()) {
             return res.json(result.array())
         }
@@ -17,34 +17,40 @@ export const ClientServices = (()=>{
             defaults: {
                 company_id: 1,
                 name: req.body.name,
+                surname: req.body.surname,
                 email: req.body.email,
-                password: hash,
-                image: 'produto-sem-imagem.png',
+                token: req.body.token,
+                image: req.body.image,
+                user_id_clerk: req.body.user_id_clerk
             }
         })
-        if(create) return res.json({message: 'Dados cadastrados com sucesso, ja podes fazer login',type: 'success'})
-        return res.json({message: 'Este email ja se encontra cadastrado',type: 'warn'})
+        await order.update({
+            cliente_id: item.id
+        })
+
+        return res.json(await getClient(item.id,Number(invoiceId)))
     })
 
-    const Login = (async(req: Request,res:Response)=>{
-        const result = validationResult(req)
-        if(!result.isEmpty) return res.json(result.array())
-        const client:ClientTypeScript = await db.cliente.findOne({where: {email: req.body.email}})
-        if (!client) return res.json({message: 'Dados incorretos',type: 'info'})
-        if (client.password == '') return res.json({message: 'Dados incorretos',type: 'info'})
-        if (bcrypt.compareSync(req.body.password,client.password)) {
-            const returnClient = await db.cliente.findOne({where: {id: client.id},include:[{
-                model: db.invoice,
-                include: [{
-                    model: db.invoice_item,
-                    include:[{
-                        model: db.produto
+    const getClient = (async(client_id: number,invoiceId: number)=>{
+        const client = await db.cliente.findOne({where: {id: client_id},
+            include: [
+                {
+                    model: db.invoice,
+                    where: {id: invoiceId},
+                    include: [{
+                        model: db.invoice_item,
+                        include:[{
+                            model: db.produto
+                        }]
                     }]
-                }]
-            }]})
-            return res.json(returnClient).status(200)
-        }
-        return res.json({message: 'Dados incorretos',type: 'info'})
+                },
+                {
+                    model: db.delivery,
+                }
+            ]
+        })
+        return client
     })
-    return {createClient,Login}
+
+    return {createClient,getClient}
 })

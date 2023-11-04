@@ -62,5 +62,6 @@ export interface ClientTypeScript{
   rua: string,
   state: string,
   invoices: TypeInvoice
-  password: string
+  token: string,
+  user_id_clerk: string
 }

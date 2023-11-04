@@ -15,8 +15,22 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'produtos_id',
         onDelete: 'CASCADE'
       })
+      produto.belongsTo(models.company,{
+        foreignKey: 'company_id',
+        onDelete: "CASCADE"
+      })
+      produto.belongsTo(models.category_products,{
+        foreignKey: 'category_product_id',
+        onDelete: 'CASCADE'
+      })
+      produto.hasMany(models.product_picture,{
+        foreignKey: 'product_id',
+        onDelete: 'CASCADE'
+      })
+      
     }
   }
+
   produto.init({
     nome: DataTypes.STRING,
     company_id: DataTypes.STRING,
