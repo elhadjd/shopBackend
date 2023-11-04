@@ -5,6 +5,7 @@ import { ClientServices } from "../controllers/clients/clientController";
 import { body} from "express-validator"
 import { productController } from "../controllers/products/product";
 import { categoriesController } from "../controllers/products/categories/categoryController";
+import { Request,Response } from "express";
 const {getCategories} = categoriesController()
 const express = require('express');
 const router = express.Router();
@@ -17,7 +18,9 @@ const {
 } = invoiceController()
 const {submitCheckout} = checkoutController()
 const {createClient} = ClientServices()
-
+router.get('/',(req: Request,res: Response)=>{
+    res.json('Este e o meu servidor').status(200)
+})
 router.get(`/products/:limit`,getProducts)
 router.get('/invoice/:id',getInvoice)
 router.post('/addProdAtOrder/:quantity/:id?/:checkout?',addProdAtOrder)
