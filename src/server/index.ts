@@ -10,7 +10,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(cors({
     methods: ['GET','POST','DELETE'],
-    origin: ['http://localhost:3000','http:/sisgesc.net/*'],
+    origin: [
+        'http://localhost:3000','http:/sisgesc.net/*',
+        'https://1837-2607-fb91-1c6b-d68a-b4a7-ce-fe6-a058.ngrok-free.app/*'
+    ],
     optionsSuccessStatus: 200,
     exposedHeaders: ['Content-Length', 'X-Foo', 'X-Bar'],
     credentials: true

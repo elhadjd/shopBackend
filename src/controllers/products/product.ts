@@ -16,6 +16,9 @@ export const productController = (()=>{
                     model: db.product_picture
                 },
                 {
+                    model: db.productPromotions
+                },
+                {
                     model: db.category_products,
 
                     include: [

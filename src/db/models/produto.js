@@ -13,7 +13,9 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       produto.hasMany(models.stocks,{
         foreignKey: 'produtos_id',
-        onDelete: 'CASCADE'
+      })
+      produto.hasMany(models.productPromotions,{
+        foreignKey: 'product_id',
       })
       produto.belongsTo(models.company,{
         foreignKey: 'company_id',
@@ -25,9 +27,7 @@ module.exports = (sequelize, DataTypes) => {
       })
       produto.hasMany(models.product_picture,{
         foreignKey: 'product_id',
-        onDelete: 'CASCADE'
       })
-      
     }
   }
 
