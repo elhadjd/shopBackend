@@ -28,6 +28,12 @@ module.exports = (sequelize, DataTypes) => {
       produto.hasMany(models.product_picture,{
         foreignKey: 'product_id',
       })
+      produto.belongsTo(models.sub_category,{
+        foreignKey: 'sub_category_id'
+      })
+      produto.belongsTo(models.company,{
+        foreignKey: 'company_id'
+      })
     }
   }
 
@@ -36,6 +42,7 @@ module.exports = (sequelize, DataTypes) => {
     company_id: DataTypes.STRING,
     image: DataTypes.STRING,
     category_product_id: DataTypes.NUMBER,
+    sub_category_id: DataTypes.BIGINT,
     product_type_id: DataTypes.NUMBER,
     fabricante: DataTypes.STRING,
     preçocust: DataTypes.FLOAT,
@@ -44,6 +51,7 @@ module.exports = (sequelize, DataTypes) => {
     preco_medio: DataTypes.FLOAT,
     estado: DataTypes.STRING
   }, {
+    
     sequelize,
     modelName: 'produto',
     defaultScope: {

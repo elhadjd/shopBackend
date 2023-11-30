@@ -1,14 +1,11 @@
 import { Request, Response } from "express";
 import { validationResult} from "express-validator"
 const db = require("../../db/models");
-import { invoiceController } from "../invoices";
 
 export const ClientServices = (()=>{
-    const {invoice} = invoiceController()
     const createClient = (async(req: Request,res: Response)=>{
         const result = validationResult(req)
-        const invoiceId = req.params.invoiceId
-        const order = await invoice(Number(invoiceId))
+        
         if (!result.isEmpty()) {
             return res.json(result.array())
         }
@@ -24,32 +21,38 @@ export const ClientServices = (()=>{
                 user_id_clerk: req.body.user_id_clerk
             }
         })
-        await order.update({
-            cliente_id: item.id
-        })
 
-        return res.json(await getClient(item.id,Number(invoiceId)))
+        return res.json(await getClient(item.id))
     })
 
-    const getClient = (async(client_id: number,invoiceId: number)=>{
-        const client = await db.cliente.findOne({where: {id: client_id},
-            include: [
-                {
-                    model: db.invoice,
-                    where: {id: invoiceId},
-                    include: [{
-                        model: db.invoice_item,
-                        include:[{
-                            model: db.produto
+    const getClient = (async(client_id: number)=>{
+        try {
+            const client = await db.cliente.findOne({where: {id: client_id},
+                include: [
+                    {
+                        model: db.invoice,
+                        where: {state: 'Cotação'},
+                        include: [{
+                            model: db.invoice_item,
+                            include:[{
+                                model: db.produto,
+                                include: [{
+                                    model:db.company
+                                }]
+                            }]
                         }]
-                    }]
-                },
-                {
-                    model: db.delivery,
-                }
-            ]
-        })
-        return client
+                    },
+                    {
+                        model: db.delivery,
+                    }
+                ]
+            })
+            return client
+        } catch (error) {
+            console.log('Erro no servidor'+error);
+            
+        }
+
     })
 
     return {createClient,getClient}

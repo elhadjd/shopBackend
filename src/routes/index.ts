@@ -8,6 +8,7 @@ import { categoriesController } from "../controllers/products/categories/categor
 import { Request,Response } from "express";
 import { companies } from '../controllers/companies/companiesController'
 import { company } from "../controllers/companies/companyController";
+import { SearchProducts } from "../controllers/products/searchProducts";
 const {getCategories} = categoriesController()
 const express = require('express');
 const router = express.Router();
@@ -15,6 +16,7 @@ const {getProduct} = productController()
 const {getProducts} = productsController()
 const companiesController = new companies()
 const companyController = new company()
+const SearchProductsController = new SearchProducts()
 const {
     addProdAtOrder,
     getInvoice,
@@ -28,10 +30,10 @@ router.get('/',(req: Request,res: Response)=>{
 
 router.get(`/products/:limit`,getProducts)
 router.get('/invoice/:id',getInvoice)
-router.post('/addProdAtOrder/:quantity/:id?/:checkout?',addProdAtOrder)
+router.post('/addProdAtOrder/:quantity/:client_id?/:checkout?',addProdAtOrder)
 router.delete('/removeItem/:idItem',removeItem)
 router.post('/checkoutSubmit',body('client'),submitCheckout)
-router.post('/registerUser/:invoiceId',
+router.post('/registerUser',
 body('email').isEmail(),
 body('name').notEmpty(),body('token'),createClient)
 router.get('/product/:productId',getProduct)
@@ -43,5 +45,6 @@ router.route('/company/:id',param('id'))
 
 router.post('/registerRatting',companyController.registerRatting)
 router.post('/sendMessageCompany',companyController.sendMessage)
+router.get('/searchProducts/:name',SearchProductsController.search)
 export default router
 

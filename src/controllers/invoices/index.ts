@@ -1,5 +1,6 @@
 import { Request, Response } from "express"
 import { ItemInvoice, Product, TypeInvoice } from "../types"
+import { ClientServices } from "../clients/clientController"
 const db = require("../../db/models")
 
 export const invoiceController = (()=>{
@@ -7,6 +8,8 @@ export const invoiceController = (()=>{
         const Invoice = await db.invoice.findOne({where:{id: 323},defaultValue:{name:'OLa Nada'}})
         return res.json({response: Invoice}).status(200)
     })
+
+    const {getClient} = ClientServices()
 
     const getInvoice = (async(req:Request,res:Response)=>{
         const id = req.params.id
@@ -22,14 +25,15 @@ export const invoiceController = (()=>{
     })
 
     const addProdAtOrder = (async(req: Request,res: Response)=>{
-        const id = req.params.id
+        const client_id = req.params.client_id
         const checkout = req.params.checkout
         const quantity = req.params.quantity
         const product:Product = req.body
-        const order = await invoice(Number(id))
+        const order = await invoice(Number(client_id),product.company_id)
         return insertItem(product,order,res,Number(quantity),checkout)
     })
     
+
     const insertItem = async(product:Product,order: TypeInvoice,res:Response,quantity:number,checkout?: string)=>{
         const stock = await checkStock(product.id,1)
         if (stock.quantity) {
@@ -41,7 +45,7 @@ export const invoiceController = (()=>{
                     armagen_id: stock.armagen_id,
                     quantity: quantity,
                     PriceCost: product.preçocust,
-                    PriceSold: product.preçovenda,
+                    PriceSold: product.preçovenda + product.preçovenda/100*5,
                     Discount: 0,
                     tax: 0,
                     totalTax: 0,
@@ -60,17 +64,17 @@ export const invoiceController = (()=>{
         return res.json(stock)
     }
 
+
     const updateItem = (async (product: Product,item: ItemInvoice,quantity:number,checkout?:string)=>{
         const quant = checkout ? quantity : item.quantity + quantity
         const check = await checkStock(product.id,quant)
         if (check.quantity) {
             const itemUpdate = await db.invoice_item.findOne({where: {id: item.id}})
-            const update = await itemUpdate.update({
+             await db.invoice_item.update({
                 TotalSold: quant * itemUpdate.PriceSold,
                 TotalCost: quant * itemUpdate.PriceCost,
                 quantity: quant,
-            })
-            await update.save()
+            },{where: {id: item.id}})
             return sumOrder(item.invoice_id)
         }
         return check
@@ -84,15 +88,15 @@ export const invoiceController = (()=>{
         return check
     })
 
-    const invoice = (async(id?:number)=>{
+    const invoice = (async(client_id: number,company_id:number)=>{
         var date = new Date()
         const [item, created] = await db.invoice.findOrCreate({
-            where: { id: id? id:0},
+            where: { cliente_id: client_id,company_id: company_id,state: 'Cotação'},
             defaults: {
                 orderNumber: `FT${date.getDay()}-${date.getMonth()+1}-${date.getFullYear()}`,
-                company_id: 1,
+                company_id: company_id,
                 user_id: 1,
-                cliente_id: 1,
+                cliente_id: client_id,
                 TotalInvoice: 0,
                 discount: 0,
                 TotalMerchandise: 0,
@@ -101,13 +105,16 @@ export const invoiceController = (()=>{
                 RestPayable: 0
             }
         })
-        return await db.invoice.findOne({where:{id:Number(item.id)},include: [{
+        return await db.invoice.findOne({where:{id:item.id},include: [{
             model: db.invoice_item,
             include:[{
                 model: db.produto
+
             }]
         }]})
     })
+
+    
 
     const removeItem = async(req:Request,res:Response)=>{
         const idItem = req.params.idItem
@@ -115,17 +122,25 @@ export const invoiceController = (()=>{
         await item.destroy()
         return res.json(await sumOrder(item.invoice_id))
     }
-    const sumOrder = (async(id:number)=>{
-        const order = await invoice(id)
-        var total:number = 0
-        order.invoice_items.forEach((item: ItemInvoice) => {
-            total += item.TotalSold
-        });
-        order.TotalMerchandise = total
-        order.TotalInvoice = total
-        const update = await order.update({...order,where:{id: order.id}})
-        await update.save()
-        return order
+
+    
+    const sumOrder = (async(invoice_id: number)=>{
+        try {
+            const order:TypeInvoice =  await db.invoice.findOne({where:{id:invoice_id},include: [{
+                model: db.invoice_item,
+            }]})
+            var total:number = 0
+            order.invoice_items.forEach((item: ItemInvoice) => {
+                total += item.TotalSold
+            });
+            
+            await db.invoice.update({TotalMerchandise: total,TotalInvoice:total},{where:{id: order.id}})
+            
+            return getClient(order.cliente_id)
+        } catch (error) {
+            console.log('Erro no servidor'+error);
+            
+        }
     })
 
 

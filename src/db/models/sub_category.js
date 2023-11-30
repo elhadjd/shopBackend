@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'category_id',
         onDelete: 'CASCADE'
       })
+      sub_category.hasMany(models.produto,{
+        foreignKey: 'sub_category_id'
+      })
     }
   }
   sub_category.init({
@@ -23,6 +26,13 @@ module.exports = (sequelize, DataTypes) => {
   }, {
     sequelize,
     modelName: 'sub_category',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt','updatedAt']
+      },
+    },
+    createdAt: false,
+    updatedAt: false,
   });
   return sub_category;
 };

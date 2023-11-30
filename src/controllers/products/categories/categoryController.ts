@@ -11,7 +11,12 @@ export function categoriesController() {
                 include: [
                     {
                         model: db.sub_category,
-                        required: false
+                        required: false,
+                        include: [
+                            {
+                                model: db.produto
+                            }
+                        ]
                     },
                     {
                         model: db.produto,

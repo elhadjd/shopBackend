@@ -7,7 +7,7 @@ export const checkoutController = (()=>{
         const client = await db.cliente.findOne({where:{id: req.body.client.id}})
         if (client) {
             const [item,create] = await db.delivery.findOrCreate({
-                where: [{client_id: client.id},{state: 1}],
+                where: [{client_id: client.id},{state: true}],
                 defaults: {
                     client_id: client.id,
                     city: req.body.client.delivery.city,
@@ -23,7 +23,8 @@ export const checkoutController = (()=>{
             if (!create) {
                 await item.update({...req.body.client.delivery,where: {id: item.id}})
             }
-            return res.json(await getClient(client.id,req.body.client.invoices[0].id))
+            return res.json(await getClient(client.id))
+            
         }
         return res.json({message: 'Usuario nâo encontrado por favor faz login e tenta novamente OBRIGADO',type: 'error'}).status(200)
         

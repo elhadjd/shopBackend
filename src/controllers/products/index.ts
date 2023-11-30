@@ -5,11 +5,12 @@ export const productsController = (()=>{
 
     const getProducts = (async(req:Request,res:Response)=>{
         const limit = Number(req.params.limit)
-        const products = await db.produto.findAll({where:{company_id: 1},
+        const products = await db.produto.findAll({where:{shop_online: true},
             include:[{
                 model: db.stocks,
             }]
         })
+        
         return res.json({response: products}).status(200)
     })
     return {getProducts}
