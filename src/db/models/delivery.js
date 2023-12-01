@@ -24,6 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     road: DataTypes.STRING,
     housNumber: DataTypes.INTEGER,
     comment: DataTypes.STRING,
+    localisation: DataTypes.TEXT,
     state: DataTypes.BOOLEAN,
   }, {
     sequelize,
