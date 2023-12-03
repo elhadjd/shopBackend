@@ -9,6 +9,7 @@ import { Request,Response } from "express";
 import { companies } from '../controllers/companies/companiesController'
 import { company } from "../controllers/companies/companyController";
 import { SearchProducts } from "../controllers/products/searchProducts";
+import {NewsletterController} from '../controllers/newsletter/newsletterController'
 const {getCategories} = categoriesController()
 const express = require('express');
 const router = express.Router();
@@ -17,13 +18,14 @@ const {getProducts} = productsController()
 const companiesController = new companies()
 const companyController = new company()
 const SearchProductsController = new SearchProducts()
+const {register} = NewsletterController()
 const {
     addProdAtOrder,
     getInvoice,
     removeItem
 } = invoiceController()
 const {submitCheckout} = checkoutController()
-const {createClient} = ClientServices()
+const {createClient,changeCurrency} = ClientServices()
 router.get('/',(req: Request,res: Response)=>{
     res.json('Este e o meu servidor').status(200)
 })
@@ -39,12 +41,11 @@ body('name').notEmpty(),body('token'),createClient)
 router.get('/product/:productId',getProduct)
 router.get('/categories/:id?',getCategories)
 router.get('/companies',companiesController.getCompanies)
-
-router.route('/company/:id',param('id'))
-    .get(companyController.getCompany)
-
+router.route('/company/:id',param('id')).get(companyController.getCompany)
 router.post('/registerRatting',companyController.registerRatting)
 router.post('/sendMessageCompany',companyController.sendMessage)
 router.get('/searchProducts/:name',SearchProductsController.search)
+router.post('/changeCurrency/:client_id',changeCurrency)
+router.post('/registerNewsletter',register)
 export default router
 

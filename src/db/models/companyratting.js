@@ -14,6 +14,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'company_id',
         onDelete: 'CASCADE'
       })
+      companyRatting.belongsTo(models.cliente,{
+        foreignKey: 'client_id',
+        onDelete: 'CASCADE'
+      })
     }
   }
   companyRatting.init({

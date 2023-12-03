@@ -19,6 +19,9 @@ module.exports = (sequelize, DataTypes) => {
       company.hasMany(models.companyRatting,{
         foreignKey: 'company_id'
       })
+      company.hasOne(models.currencyCompany,{
+        foreignKey: 'company_id'
+      })
     }
   }
   company.init({

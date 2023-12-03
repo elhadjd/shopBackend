@@ -22,8 +22,16 @@ module.exports = (sequelize, DataTypes) => {
     startDate: DataTypes.DATE,
     endDate: DataTypes.DATE
   }, {
+    
     sequelize,
     modelName: 'productPromotions',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt','updatedAt']
+      },
+    },
+    createdAt: false,
+    updatedAt: false,
   });
   return productPromotions;
 };

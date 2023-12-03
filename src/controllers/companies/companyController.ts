@@ -24,15 +24,26 @@ export class company{
                     },
                     {
                         model: db.produto,
+                        where: {shop_online: true},
                         limit: 30,
                         include: [{
                             model: db.stocks,
+                        },{
+                            model: db.company,
+                            include: [{
+                                model:db.currencyCompany
+                            }]
                         }]
                     },
                     {
                         model: db.companyRatting,
                         order: [
                             ['createdAt', 'ASC']
+                        ],
+                        include: [
+                            {
+                                model: db.cliente
+                            }
                         ]
                     }
                 ]

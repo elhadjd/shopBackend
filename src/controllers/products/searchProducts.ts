@@ -10,6 +10,14 @@ export class SearchProducts{
                   [Op.like]: `%${req.params.name}%`,
                 },
               },
+              include: [{
+                model: db.company,
+                include: [{
+                    model:db.currencyCompany
+                }]
+              },{
+                model: db.stocks
+              }],
               limit: 100
             });
         

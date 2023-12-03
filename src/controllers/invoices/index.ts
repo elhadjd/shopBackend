@@ -109,7 +109,6 @@ export const invoiceController = (()=>{
             model: db.invoice_item,
             include:[{
                 model: db.produto
-
             }]
         }]})
     })
@@ -136,10 +135,9 @@ export const invoiceController = (()=>{
             
             await db.invoice.update({TotalMerchandise: total,TotalInvoice:total},{where:{id: order.id}})
             
-            return getClient(order.cliente_id)
+            return await getClient(order.cliente_id)
         } catch (error) {
             console.log('Erro no servidor'+error);
-            
         }
     })
 

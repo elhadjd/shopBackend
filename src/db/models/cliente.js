@@ -14,6 +14,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'cliente_id',
         onDelete: 'CASCADE',
       })
+      cliente.hasOne(models.currencyClient,{
+        foreignKey: 'cliente_id',
+      })
       cliente.hasOne(models.delivery,{
         foreignKey: 'client_id',
         onDelete: 'CASCADE',

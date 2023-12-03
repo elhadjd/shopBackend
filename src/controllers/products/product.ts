@@ -1,4 +1,5 @@
 import { Request, Response } from "express"
+import { where } from "sequelize";
 const db = require('../../db/models');
 export const productController = (()=>{
 
@@ -10,7 +11,10 @@ export const productController = (()=>{
                     model: db.stocks,
                 },
                 {
-                    model: db.company
+                    model: db.company,
+                    include: [{
+                        model:db.currencyCompany
+                    }]
                 },
                 {
                     model: db.product_picture
@@ -23,11 +27,21 @@ export const productController = (()=>{
 
                     include: [
                         {
-                            model: db.produto
+                            model: db.produto,
+                            where: {shop_online: true,estado:'active'},
+                            include: [
+                                {
+                                    model: db.company,
+                                    include: [{
+                                        model:db.currencyCompany
+                                    }]
+                                }
+                            ]
                         },
                         {
                             model: db.sub_category
-                        }
+                        },
+                        
                     ]
                 }
             ],

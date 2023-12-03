@@ -49,6 +49,7 @@ module.exports = (sequelize, DataTypes) => {
     imposto: DataTypes.STRING,
     preçovenda: DataTypes.FLOAT,
     preco_medio: DataTypes.FLOAT,
+    shop_online: DataTypes.BOOLEAN,
     estado: DataTypes.STRING
   }, {
     

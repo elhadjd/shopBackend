@@ -14,14 +14,26 @@ export function categoriesController() {
                         required: false,
                         include: [
                             {
-                                model: db.produto
+                                model: db.produto,
+                                include: [{
+                                    model: db.company,
+                                    include: [{
+                                        model:db.currencyCompany
+                                    }]
+                                }]
                             }
                         ]
                     },
                     {
                         model: db.produto,
-                        where: {estado: 'active'},
-                        required: false
+                        where: {estado: 'active',shop_online: true},
+                        required: false,
+                        include: [{
+                            model: db.company,
+                            include: [{
+                                model:db.currencyCompany
+                            }]
+                        }]
                     }
                 ]
             })

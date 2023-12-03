@@ -8,6 +8,11 @@ export const productsController = (()=>{
         const products = await db.produto.findAll({where:{shop_online: true},
             include:[{
                 model: db.stocks,
+            },{
+                model: db.company,
+                include: [{
+                    model:db.currencyCompany
+                }]
             }]
         })
         

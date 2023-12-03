@@ -11,6 +11,7 @@ export interface Product{
   imposto: string,
   preçovenda: number,
   preco_medio: number,
+  company: CompanyTs,
   estado: number,
   productPromotions: productPromotions[]
 }
@@ -60,11 +61,30 @@ export interface ClientTypeScript{
   phone: string,
   city: string,
   country: string,
+  currencyClient: currencyClientTs,
   rua: string,
   state: string,
-  invoices: TypeInvoice
+  invoices: TypeInvoice[]
   token: string,
   user_id_clerk: string
+}
+
+export interface currencyClientTs {
+  id: bigint,
+  code: string,
+  currency: string,
+  digits: string,
+  number: number,
+  client_id: bigint,
+}
+
+export interface currencyCompanyTs {
+  id: bigint,
+  code: string,
+  currency: string,
+  digits: string,
+  number: number,
+  company_id: bigint,
 }
 
 export interface productPromotions{
@@ -90,6 +110,7 @@ export interface CompanyTs{
   phone:string,
   sede:string,
   description:string,
+  currencyCompany: currencyCompanyTs,
   produtos: Product[],
   companyRatting: companyRatting[]
 }

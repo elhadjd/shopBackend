@@ -18,6 +18,7 @@ export const checkoutController = (()=>{
             state: true
         }
         try {
+            
             if (client) {
                 const [delivery,createDelivery] = await db.delivery.findOrCreate({
                     where: [{client_id: client.id},{state: true}],
