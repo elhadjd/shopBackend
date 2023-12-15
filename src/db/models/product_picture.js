@@ -18,10 +18,19 @@ module.exports = (sequelize, DataTypes) => {
   }
   product_picture.init({
     image: DataTypes.STRING,
-    product_id: DataTypes.BIGINT
+    product_id: DataTypes.BIGINT,
+    updated_at: DataTypes.STING,
+    updated_at: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'product_picture',
+    defaultScope: {
+      attributes: {
+        exclude: ['createdAt','updatedAt']
+      },
+    },
+    createdAt: false,
+    updatedAt: false,
   });
   return product_picture;
 };

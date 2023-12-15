@@ -6,7 +6,7 @@ export const useConvertMoneyController = (()=>{
     const converter = async(client:ClientTypeScript)=>{
         for (const order of client.invoices) {
             order.TotalInvoice = 0;
-           
+        
             for (const item of order.invoice_items) {
                 if (item.produto.company.currencyCompany.currency != client.currencyClient.currency) {
                     const url = `https://www.google.com/search?q=${item.TotalSold}+${item.produto.company.currencyCompany.currency}+em+${client.currencyClient.currency}&oq=${item.TotalSold+item.produto.company.currencyCompany.currency}+em+${client.currencyClient.currency}&gs_lcrp=EgZjaHJvbWUqCggBEAAYChgWGB4yBggAEEUYOTIKCAEQABgKGBYYHtIBCTMzNzM5ajFqOagCALACAA&sourceid=chrome&ie=UTF-8`;

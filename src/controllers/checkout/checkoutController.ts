@@ -6,6 +6,7 @@ export const checkoutController = (()=>{
     const {getClient} = ClientServices()
     const submitCheckout = (async(req: Request,res: Response)=>{
         const client = await db.cliente.findOne({where:{id: req.body.client.id}})
+        if(req.params.location == null) return res.status(500).json({message: 'Por favor seleciona a localisação'})
         const dataDelivery = {
             client_id: client.id,
             city: req.body.client.delivery.city,
@@ -14,7 +15,7 @@ export const checkoutController = (()=>{
             road: req.body.client.delivery.road,
             housNumber: req.body.client.delivery.housNumber,
             comment: req.body.client.delivery.comment,
-            localisation: req.body.client.delivery.localisation,
+            localisation: req.params.location,
             state: true
         }
         try {

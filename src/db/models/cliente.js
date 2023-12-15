@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       cliente.hasMany(models.invoice,{
         foreignKey: 'cliente_id',
+        required: false,
         onDelete: 'CASCADE',
       })
       cliente.hasOne(models.currencyClient,{

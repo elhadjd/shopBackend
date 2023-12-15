@@ -32,7 +32,6 @@ export const invoiceController = (()=>{
         const order = await invoice(Number(client_id),product.company_id)
         return insertItem(product,order,res,Number(quantity),checkout)
     })
-    
 
     const insertItem = async(product:Product,order: TypeInvoice,res:Response,quantity:number,checkout?: string)=>{
         const stock = await checkStock(product.id,1)
@@ -100,6 +99,7 @@ export const invoiceController = (()=>{
                 TotalInvoice: 0,
                 discount: 0,
                 TotalMerchandise: 0,
+                DateOrder: Date.now(),
                 tax: 0,
                 state: 'Cotação',
                 RestPayable: 0

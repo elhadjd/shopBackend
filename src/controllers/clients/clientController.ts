@@ -13,9 +13,9 @@ export const ClientServices = (()=>{
         }
 
         try {
-            const [item,create] = await db.cliente.findOrCreate({
-                where: [{email: req.body.email}],
-                defaults: {
+            const client = await db.cliente.findOne({where: {email: req.body.email}});
+            if (!client) {
+                const client = await db.cliente.create({
                     company_id: 1,
                     name: req.body.name,
                     surname: req.body.surname,
@@ -23,17 +23,19 @@ export const ClientServices = (()=>{
                     token: req.body.token,
                     image: req.body.image,
                     user_id_clerk: req.body.user_id_clerk
-                }
-            })
-            res.json(await getClient(item.id))
+                })
+            }
+            res.json(await getClient(client.id))
         } catch (error) {
             res.status(500).json({message: 'Erro no servidor '+error})
         }
     })
 
-    const getClient = (async(client_id: number)=>{
+    const getClients = (async(req: Request,res:Response)=>{
+        const client_id = req.params.client_id
         try {
-            const client = await db.cliente.findOne({where: {id: client_id},
+            const client = await db.cliente.findOne({
+                where: {id: client_id},
                 include: [
                     {
                         model: db.invoice,
@@ -49,7 +51,8 @@ export const ClientServices = (()=>{
                                     }]
                                 }]
                             }]
-                        }]
+                        }],
+                        required: false
                     },
                     {
                         model: db.delivery,
@@ -59,11 +62,49 @@ export const ClientServices = (()=>{
                     }
                 ]
             })
+            return res.json(client)
+        } catch (error) {
+            console.log('Erro no servidor '+error);
+        }
+    })
+
+    const getClient = (async(client_id: number)=>{
+        try {
+            const client = await db.cliente.findOne({where: {id: client_id},
+                include: [
+                    {
+                        model: db.invoice,
+                        where: {state: 'Cotação'},
+                        separate: true,
+                        include: [{
+                            model: db.invoice_item,
+                            include:[{
+                                model: db.produto,
+                                include: [{
+                                    model: db.company,
+                                    include: [{
+                                        model:db.currencyCompany
+                                    }]
+                                }]
+                            }]
+                        }],
+                        required: false
+                    },
+                    {
+                        model: db.delivery,
+                    },
+                    {
+                        model: db.currencyClient,
+                    }
+                ]
+            })
+            if (!client.invoices) {
+                client.invoices = []
+            }
             return client
         } catch (error) {
             console.log('Erro no servidor '+error);
         }
-
     })
 
     const changeCurrency = async(req:Request,res:Response)=>{
@@ -106,5 +147,5 @@ export const ClientServices = (()=>{
         }
     }
 
-    return {createClient,getClient,changeCurrency}
+    return {createClient,getClient,changeCurrency,getClients}
 })
