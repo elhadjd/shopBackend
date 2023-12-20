@@ -34,6 +34,12 @@ module.exports = (sequelize, DataTypes) => {
       produto.belongsTo(models.company,{
         foreignKey: 'company_id'
       })
+      produto.hasMany(models.product_likes,{
+        foreignKey: 'product_id'
+      })
+      produto.hasMany(models.product_comments,{
+        foreignKey: 'product_id'
+      })
     }
   }
 
@@ -50,7 +56,8 @@ module.exports = (sequelize, DataTypes) => {
     preçovenda: DataTypes.FLOAT,
     preco_medio: DataTypes.FLOAT,
     shop_online: DataTypes.BOOLEAN,
-    estado: DataTypes.STRING
+    estado: DataTypes.STRING,
+    description: DataTypes.TEXT
   }, {
     
     sequelize,
