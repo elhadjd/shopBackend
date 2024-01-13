@@ -47,7 +47,8 @@ export interface ItemInvoice {
     DateOrder: string;
     DateDue: string;
     RestPayable: number;
-    invoice_items: ItemInvoice[]
+    invoice_items: ItemInvoice[],
+    company: CompanyTs
 }
 
 export interface ClientTypeScript{

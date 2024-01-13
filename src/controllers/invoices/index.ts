@@ -5,7 +5,7 @@ const db = require("../../db/models")
 
 export const invoiceController = (()=>{
     const getInvoices = (async(req:Request,res:Response)=>{
-        const Invoice = await db.invoice.findOne({where:{id: 323},defaultValue:{name:'OLa Nada'}})
+        const Invoice = await db.invoice.findOne({where:{id: 323}})
         return res.json({response: Invoice}).status(200)
     })
 
@@ -133,7 +133,7 @@ export const invoiceController = (()=>{
                 total += item.TotalSold
             });
             
-            await db.invoice.update({TotalMerchandise: total,TotalInvoice:total},{where:{id: order.id}})
+            await db.invoice.update({TotalMerchandise: total,TotalInvoice:total,RestPayable:total},{where:{id: order.id}})
             
             return await getClient(order.cliente_id)
         } catch (error) {

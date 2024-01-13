@@ -1,19 +1,19 @@
-{
-  "development": {
-    "username": "postgres",
-    "password": "mamadouaa",
-    "database": "test",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port": 5432
-  },
-  
-  "production": {
-    "username": "postgres",
-    "password": "mamadouaa",
-    "database": "test",
-    "host": "127.0.0.1",
-    "dialect": "postgres",
-    "port": 5432
+  {
+    "development": {
+      "username": "sisges27_elhadjd73",
+      "password": "ElhadjKalil",
+      "database": "sisges27_sigesc",
+      "host": "162.241.2.220",
+      "dialect": "mysql",
+      "port": 3306
+    },
+    
+    "production": {
+      "username": "sisges27_elhadjd73",
+      "password": "ElhadjKalil",
+      "database": "sisges27_sigesc",
+      "host": "162.241.2.220",
+      "dialect": "mysql",
+      "port": 3306
+    }
   }
-}

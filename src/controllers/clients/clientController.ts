@@ -76,18 +76,23 @@ export const ClientServices = (()=>{
                         model: db.invoice,
                         where: {state: 'Cotação'},
                         separate: true,
-                        include: [{
-                            model: db.invoice_item,
-                            include:[{
-                                model: db.produto,
-                                include: [{
-                                    model: db.company,
+                        include: [
+                            {
+                                model: db.invoice_item,
+                                include:[{
+                                    model: db.produto,
                                     include: [{
-                                        model:db.currencyCompany
+                                        model: db.company,
+                                        include: [{
+                                            model:db.currencyCompany
+                                        }]
                                     }]
                                 }]
-                            }]
-                        }],
+                            },
+                            {
+                                model: db.delivery,
+                            }
+                        ],
                         required: false
                     },
                     {
@@ -136,6 +141,7 @@ export const ClientServices = (()=>{
 
                 const currencyClient = await db.currencyClient.findOne({where:{id: existCurrency.id}})
 
+            
                 return res.json({result,currencyClient: currencyClient}).status(200)
                 
             }).catch((err)=>{
@@ -147,5 +153,46 @@ export const ClientServices = (()=>{
         }
     }
 
-    return {createClient,getClient,changeCurrency,getClients}
+    const saveClientAddress = (async(req: Request,res:Response)=>{
+        if (req.body.localisation == "" || 
+            req.body.country == "" ||
+            req.body.county == "" ||
+            req.body.city == "") {
+            return res.status(500).json({message: 'Por favor preeche todos os campos'})
+        }
+        try {
+            await db.delivery.upsert({
+                id: req.body.id, // ou a propriedade chave primária do seu modelo
+                city: req.body.city,
+                client_id: req.body.client_id,
+                phone: req.body.phone,
+                country: req.body.country,
+                county: req.body.county,
+                neighborhood: req.body.neighborhood,
+                road: req.body.road,
+                housNumber: req.body.housNumber,
+                comment: req.body.comment,
+                localisation: req.body.localisation,
+                state: true,
+            });
+            return res.json({data:await getClient(req.body.client_id),message: 'Success'})
+        } catch (error) {
+            res.status(500).json({message: "Aconteceu um erro no servidor por favor tenta novamente mais tard"})
+            console.log(error);
+        }
+    })
+
+    const deleteAddress = async(req: Request,res:Response)=>{
+        try {
+            const address = await db.delivery.findOne({where:{id:req.params.address_id}})
+            await address.destroy()
+            return res.json({data:await getClient(Number(req.params.client_id)),message: 'Success'})
+        } catch (error) {
+            console.log(error);
+            
+            return res.status(500).json({message: 'Aconteceu um erro no servidor por favor tenta novamente mais tarde'})
+        }
+    }
+
+    return {createClient,getClient,changeCurrency,getClients,saveClientAddress,deleteAddress}
 })

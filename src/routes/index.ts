@@ -24,8 +24,8 @@ const {
     getInvoice,
     removeItem
 } = invoiceController()
-const {submitCheckout} = checkoutController()
-const {createClient,changeCurrency,getClients} = ClientServices()
+const {submitCheckout,RegisterPayment} = checkoutController()
+const {createClient,changeCurrency,getClients,saveClientAddress,deleteAddress} = ClientServices()
 router.get('/',(req: Request,res: Response)=>{
     res.json('Este e o meu servidor').status(200)
 })
@@ -34,7 +34,7 @@ router.get(`/products/:limit`,getProducts)
 router.get('/invoice/:id',getInvoice)
 router.post('/addProdAtOrder/:quantity/:client_id?/:checkout?',addProdAtOrder)
 router.delete('/removeItem/:idItem',removeItem)
-router.post('/checkoutSubmit/:location',body('client'),submitCheckout)
+router.post('/checkoutSubmit',body('client'),submitCheckout)
 router.post('/registerUser',
 body('email').isEmail(),
 body('name').notEmpty(),body('token'),createClient)
@@ -49,4 +49,7 @@ router.post('/changeCurrency/:client_id',changeCurrency)
 router.post('/registerNewsletter',register)
 router.post('/likeAnComment',likeAnComment)
 router.get('/getClient/:client_id',()=>getClients)
+router.post('/saveClientAddress',saveClientAddress)
+router.delete('/deleteAddress/:address_id/:client_id',deleteAddress)
+router.post('/RegisterPayment/:order',RegisterPayment)
 export default router

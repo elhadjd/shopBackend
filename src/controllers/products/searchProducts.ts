@@ -4,12 +4,15 @@ const db = require('../../db/models/index');
 export class SearchProducts{
     public async search(req:Request,res:Response){
         try {
+          
             const results = await db.produto.findAll({
               where: {
+                shop_online: true,
                 nome: {
                   [Op.like]: `%${req.params.name}%`,
                 },
               },
+
               include: [{
                 model: db.company,
                 include: [{
@@ -26,5 +29,6 @@ export class SearchProducts{
             res.status(401).json('Erro ao pesquisar produtos:'+error)
             throw error;
         }
+
     }
 }

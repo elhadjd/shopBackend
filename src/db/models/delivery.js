@@ -19,6 +19,8 @@ module.exports = (sequelize, DataTypes) => {
   delivery.init({
     city: DataTypes.STRING,
     client_id: DataTypes.BIGINT,
+    phone: DataTypes.STRING,
+    country: DataTypes.STRING,
     county: DataTypes.STRING,
     neighborhood: DataTypes.STRING,
     road: DataTypes.STRING,

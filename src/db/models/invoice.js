@@ -14,9 +14,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'invoice_id',
         onDelete: 'CASCADE',
       })
+      invoice.belongsTo(models.company,{
+        foreignKey: 'company_id',
+        onDelete: 'CASCADE',
+      })
       invoice.belongsTo(models.cliente,{
         foreignKey: 'cliente_id',
         onDelete: 'CASCADE'
+      })
+      invoice.belongsTo(models.delivery,{
+        foreignKey: 'delivery_id'
       })
     }
   }

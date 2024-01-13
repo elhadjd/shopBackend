@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Confirmação de Pagamento</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            color: #3498db;
+        }
+
+        p {
+            color: #555;
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+
+        .product-details {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 10px;
+            background-color: #fff;
+        }
+
+        .product-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .product-info {
+            flex-grow: 1;
+        }
+
+        footer {
+            margin-top: 30px;
+            color: #777;
+            font-size: 14px;
+        }
+
+        .footer-link {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .company-info {
+            margin-top: 20px;
+            text-align: left;
+        }
+
+        .company-logo {
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://geral.sisgesc.net/favicon.ico" alt="Company Logo" class="company-logo">
+        <h1>Payment confirmation</h1>
+        <p>Thank you for choosing our products. Your payment has been confirmed successfully.</p>
+
+        <h2>Purchase Details:</h2>
+        <ul>
+            <li><strong>Client:</strong> {{name}}</li>
+            <li><strong>Email:</strong> {{email}}</li>
+            <li><strong>Phone Number:</strong> {{phone}}</li>
+            <li><strong>Invoice Number:</strong> {{invoiceNumber}}</li>
+            <li><strong>Purchase Date:</strong> {{purchaseDate}}</li>
+            <li><strong>Items Purchased:</strong>
+                {{products}}
+            </li>
+        </ul>
+
+        <div class="company-info">
+            <p>Thank you for shopping with SIGESC!</p>
+            <p><a href="https://www.your-company.com" class="footer-link">Visit our website</a></p>
+        </div>
+
+        <footer>
+            <p>Please contact us if you have any questions. Thank you again!</p>
+        </footer>
+    </div>
+</body>
+</html>
